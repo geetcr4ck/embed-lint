@@ -13,25 +13,25 @@
 
 ## What is EmbedLint?
 
-**EmbedLint** is a visual tool for building, validating, and exporting **Discord Component Embeds** (`type 17` Container payloads). Built for vibecoders, bot developers, and Discord communities who want their link previews to look clean and rich without having to write JSON manually.
+**EmbedLint** is a visual tool for building, validating, and exporting **Discord Component Embeds** (payload `type 17` Container). Built for vibecoders, bot developers, and Discord communities who want their link previews to look clean and rich without having to write JSON manually.
 
 Key features:
 
 - **Drag & drop builder** — compose Container, Section, Text Display, Button, Thumbnail, Media Gallery, Separator.
-- **Real-time validation** — check Discord limits directly as you type: max 40 components, 3,000 bytes linked JSON, buttons only `style: 5`, media only `{ url }`, URL max 2,048 characters.
-- **Discord-accurate preview** — simulate the embed appearance as it would look on Discord.
+- **Real-time validation** — check Discord limits live as you type: max 40 components, 3,000 bytes linked JSON, buttons only `style: 5`, media only `{ url }`, URLs max 2,048 characters.
+- **Discord-accurate preview** — simulate how the embed will look on Discord.
 - **Two export modes** — inline `<script id="discord:component-embed">` or linked JSON via `<link rel="discord:component-embed">`.
-- **OG fallback generator** — Open Graph meta tags that are required alongside the component embed.
+- **OG fallback generator** — Open Graph meta tags that must be present alongside component embed.
 
 ---
 
 ## How It Works Briefly
 
-1. **Build** — drag components onto the canvas, fill in content, set the accent color.
+1. **Build** — drag components onto the canvas, fill in content, set accent color.
 2. **Validate** — EmbedLint automatically checks every Discord constraint.
 3. **Preview** — see the result as it will appear on Discord.
-4. **Export** — copy the inline script or linked JSON, paste it into your web page.
-5. **Fallback** — copy the OG meta tags for a standard preview if the component embed fails.
+4. **Export** — copy inline script or linked JSON, paste it into your web page.
+5. **Fallback** — copy OG meta tags for standard preview if component embed fails.
 
 ---
 
@@ -53,7 +53,7 @@ cd embed-lint
 # Install dependencies
 npm install
 
-# Run the dev server
+# Run dev server
 npm run dev
 ```
 
@@ -65,7 +65,7 @@ Open [http://localhost:3000](http://localhost:3000).
 # Build Next.js + transform for Cloudflare
 npm run build:pages
 
-# Preview the build output locally
+# Preview the build locally
 npm run pages:dev
 ```
 
@@ -75,7 +75,7 @@ npm run pages:dev
 
 1. Push the repo to GitHub.
 2. Open **Cloudflare Dashboard → Workers & Pages → Pages → Create a project**.
-3. Connect to the repo `geetcr4ck/embed-lint`.
+3. Connect to the `geetcr4ck/embed-lint` repo.
 4. Configure the build:
 
 | Setting | Value |
@@ -88,7 +88,52 @@ npm run pages:dev
 5. Add environment variables:
    - `NODE_VERSION` = `20`
    - `HUSKY` = `0` (if using Husky)
-6. In **Settings → Functions → Runtime → Compatibility flags**, add `nodejs_compat` for Production and Preview.
+6. Under **Settings → Functions → Runtime → Compatibility flags**, add `nodejs_compat` for Production and Preview.
 7. Deploy.
 
 After deployment, the site will be available at `https://embed-lint.pages.dev`.
+
+---
+
+## Project Structure
+
+```
+embed-lint/
+├── app/                  # Next.js App Router
+├── components/           # UI components (builder, preview, validator)
+├── lib/                  # Validator, parser, exporter
+├── public/               # Static assets
+├── next.config.js        # Next.js + Cloudflare configuration
+├── tailwind.config.ts    # Tailwind configuration (v4 CSS-first)
+├── postcss.config.js
+├── tsconfig.json
+└── package.json
+```
+
+Full details are in the **Repo Structure** section below.
+
+---
+
+## License
+
+This project is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**.
+
+This means:
+- You are free to use, modify, and distribute this project.
+- If you run a modified version as a public service (SaaS), you **must** open-source it.
+- See the [LICENSE](./LICENSE) file for the full text.
+
+---
+
+## Contributing
+
+Contributions are welcome! Feel free to open an issue or pull request.
+
+1. Fork the repo.
+2. Create a feature branch (`git checkout -b feature/new-validator`).
+3. Commit your changes.
+4. Push and open a PR.
+
+---
+
+Built with ☕ and a little blurple.
