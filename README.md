@@ -91,8 +91,6 @@ npm run pages:dev
 6. Under **Settings → Functions → Runtime → Compatibility flags**, add `nodejs_compat` for Production and Preview.
 7. Deploy.
 
-After deployment, the site will be available at `https://embed-lint.pages.dev`.
-
 ---
 
 ## Project Structure
