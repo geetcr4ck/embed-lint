@@ -1,137 +1,58 @@
 # EmbedLint
 
-> **Visual builder & linter for Discord Component Embeds.**  
-> Drag, drop, validate, export — catch invalid payloads before Discord does.
-
-[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
-[![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)](https://nextjs.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript)](https://www.typescriptlang.org/)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](./LICENSE)
+[![Next.js](https://img.shields.io/badge/Next.js-14-black?logo=next.js)](https://nextjs.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?logo=typescript)](https://www.typescriptlang.org/)
 [![Cloudflare Pages](https://img.shields.io/badge/Cloudflare-Pages-F38020?logo=cloudflare)](https://pages.cloudflare.com/)
 
----
+Builder and validator for **Discord Component Embeds** (Container `type 17`). Fully client-side, static export to Cloudflare Pages. See `PRD.md`, `ARCHITECTURE.md`, `DESIGN.md`, `AGENTS.md`.
 
-## What is EmbedLint?
+Status: **MVP complete.** Drag-and-drop builder, real-time validation, Discord preview, inline/linked export, JSON inspector, import, templates, autosave, undo/redo.
 
-**EmbedLint** is a visual tool for building, validating, and exporting **Discord Component Embeds** (payload `type 17` Container). Built for vibecoders, bot developers, and Discord communities who want their link previews to look clean and rich without having to write JSON manually.
+## Features
 
-Key features:
+- 8-type palette (Container, Action Row, link Button, Section, Text Display, Thumbnail, Media Gallery, Separator) with drag and drop plus click/keyboard fallback.
+- Per-type inline editors (accent picker, markdown toolbar, live URL validation).
+- 12-rule validator (max 40 components, 3000 bytes, Button/Media whitelists, Section structure, integer accent) with paths and fix suggestions. Clicking an error selects and scrolls to the node.
+- Discord preview (dark/light via tokens) with spoiler reveal, rendered from the tree.
+- Inline `<script>` and linked `<link>` export plus JSON download, over-limit protection, `?v=2` cache hint.
+- Lazy Monaco JSON inspector, two-step confirm paste/upload import, 4 templates, status bar counters.
+- Responsive: Build/Preview/Export tabs on mobile, palette drawer on tablet, 3 columns on desktop.
 
-- **Drag & drop builder** — compose Container, Section, Text Display, Button, Thumbnail, Media Gallery, Separator.
-- **Real-time validation** — check Discord limits live as you type: max 40 components, 3,000 bytes linked JSON, buttons only `style: 5`, media only `{ url }`, URLs max 2,048 characters.
-- **Discord-accurate preview** — simulate how the embed will look on Discord.
-- **Two export modes** — inline `<script id="discord:component-embed">` or linked JSON via `<link rel="discord:component-embed">`.
-- **OG fallback generator** — Open Graph meta tags that must be present alongside component embed.
-
----
-
-## How It Works Briefly
-
-1. **Build** — drag components onto the canvas, fill in content, set accent color.
-2. **Validate** — EmbedLint automatically checks every Discord constraint.
-3. **Preview** — see the result as it will appear on Discord.
-4. **Export** — copy inline script or linked JSON, paste it into your web page.
-5. **Fallback** — copy OG meta tags for standard preview if component embed fails.
-
----
-
-## Installation (Development)
-
-### Prerequisites
-
-- Node.js 18+ (20+ recommended)
-- npm / pnpm / bun
-- Cloudflare account (for deployment)
-
-### Local Setup
+## Setup
 
 ```bash
-# Clone repo
-git clone https://github.com/geetcr4ck/embed-lint.git
-cd embed-lint
-
-# Install dependencies
 npm install
-
-# Run dev server
-npm run dev
+npm run dev          # http://localhost:3000
+npm run build        # static export to out/
+npm run typecheck    # tsc --noEmit
+npm run lint         # next lint
+npm run test         # vitest run (121 tests)
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Node 20 or later, use plain `npm`.
 
-### Build for Cloudflare Pages
+## Deploy (Cloudflare Pages)
 
-```bash
-# Build Next.js + transform for Cloudflare
-npm run build:pages
+- Build command: `npm run build`, output directory: `out`, Node 20.
+- Headers and routing already set up in `public/_headers` and `public/_redirects`.
 
-# Preview the build locally
-npm run pages:dev
-```
+## Dependencies Considered but Not Used
 
----
+| Package                   | Decision                                                            |
+| ------------------------- | ------------------------------------------------------------------- |
+| `react-hook-form`         | Not used, controlled inputs are enough for editors.                 |
+| `@tailwindcss/typography` | Not used, markdown styles hand-written to follow theme tokens.      |
+| `@testing-library/*`      | Not used yet, Vitest units cover `lib` plus build as integration.   |
+| `playwright`              | Golden-path E2E not automated yet, click verification still manual. |
 
-## Deploy to Cloudflare Pages
+## Code Rules
 
-1. Push the repo to GitHub.
-2. Open **Cloudflare Dashboard → Workers & Pages → Pages → Create a project**.
-3. Connect to the `geetcr4ck/embed-lint` repo.
-4. Configure the build:
-
-| Setting | Value |
-|---|---|
-| Framework preset | None |
-| Build command | `npm run build:pages` |
-| Build output directory | `dist` |
-| Root directory | `/` |
-
-5. Add environment variables:
-   - `NODE_VERSION` = `20`
-   - `HUSKY` = `0` (if using Husky)
-6. Under **Settings → Functions → Runtime → Compatibility flags**, add `nodejs_compat` for Production and Preview.
-7. Deploy.
-
----
-
-## Project Structure
-
-```
-embed-lint/
-├── app/                  # Next.js App Router
-├── components/           # UI components (builder, preview, validator)
-├── lib/                  # Validator, parser, exporter
-├── public/               # Static assets
-├── next.config.js        # Next.js + Cloudflare configuration
-├── tailwind.config.ts    # Tailwind configuration (v4 CSS-first)
-├── postcss.config.js
-├── tsconfig.json
-└── package.json
-```
-
-Full details are in the **Repo Structure** section below.
-
----
+- No `any` (only `unknown` plus Zod parse), no backend, no fetching user URLs.
+- Pure validator and serializer: no React, no DOM.
+- Discord payload types only in `lib/schema/`, canonical builder types in `lib/serializer/types.ts`.
 
 ## License
 
-This project is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**.
-
-This means:
-- You are free to use, modify, and distribute this project.
-- If you run a modified version as a public service (SaaS), you **must** open-source it.
-- See the [LICENSE](./LICENSE) file for the full text.
-
----
-
-## Contributing
-
-Contributions are welcome! Feel free to open an issue or pull request.
-
-1. Fork the repo.
-2. Create a feature branch (`git checkout -b feature/new-validator`).
-3. Commit your changes.
-4. Push and open a PR.
-
----
-
-Built with ☕ and a little blurple.
+Licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**. See [LICENSE](./LICENSE). If you run a modified version as a public service, you must open-source it.
