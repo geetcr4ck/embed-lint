@@ -4,6 +4,9 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'EmbedLint',
   description: 'Builder and validator for Discord Component Embeds (client-side).',
+  icons: {
+    icon: '/icon.webp',
+  },
 };
 
 interface RootLayoutProps {
